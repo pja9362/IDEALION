@@ -1,0 +1,28 @@
+<!-- 나만의 지도에서 위치를 추가하는 화면-->
+{% extends 'base.html'%}
+
+{% block content %}
+<h1>장소 추가하기</h1>
+
+<!--아래 폼들이 view.py의 create()함수에 전달됩니다-->
+<form action="{%url 'create' %}" method = "post" enctype="multipart/form-data">
+    {%csrf_token%}
+
+    <!-- 위치 정보를 나타내주는 폼들 (숨기려면 input type = "hidden ~~ "으로 고쳐주시면 됩니다)-->
+    <p>location:
+    <input type = "text" name = "lat" value = {{lat}}>
+    <input type = "text" name = "lng" value = {{lng}}> 
+    </p>
+
+    <!-- 지도 카테고리를 나타내는 폼-->
+    <p>category:
+    <input type = "text" name = "category" value = {{category}}>
+    </p>
+
+    <!-- 나머지 폼들 (form.py의 contentsForm에 있는 폼들이 나타납니다)-->
+    {{form.as_p}} <!--p태그로 감싸기-->
+
+    <!-- 제출 버튼-->
+    <button type = "submit">submit</button>
+</form>
+{% endblock %}

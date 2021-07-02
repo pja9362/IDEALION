@@ -1,0 +1,151 @@
+<!-- 나만의 지도 화면입니다-->
+{% extends 'base.html'%}
+
+{% block content %}
+        <!-- 유저가 로그인 되어있을 때 실행됨-->
+        {% if user.is_authenticated %}
+        <h1>{{list.name}} 지도</h1>
+        <p><em>지도를 클릭해주세요!</em></p> 
+        {% endif %}
+
+        <!-- css로 지도의 너비, 높이 등을 설정할 수 있는 div 태그 -->
+        <div id="map" style="width:1250px;height:500px;"></div>
+        <div id="clickLatlng"></div>
+
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f10335069a4d9c45d697acbf72f5383f"></script>
+        <script>    
+            var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+                mapOption = { 
+                    center: new kakao.maps.LatLng({{user.lat}}, {{user.lng}}), // 지도의 중심좌표
+                    level: 3 // 지도의 확대 레벨
+                };
+
+            var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+            var centerMarker = new kakao.maps.Marker({ 
+                // 지도 중심좌표에 마커를 생성합니다 
+                position: map.getCenter(),
+            }); 
+
+            centerMarker.setClickable(true)
+            
+            // 지도에 마커를 표시합니다
+            centerMarker.setMap(map);
+
+
+            // 지도에 클릭 이벤트를 등록합니다
+            // 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
+            kakao.maps.event.addListener(map, 'click', function(mouseEvent) {            
+                //클릭하면 추가하시겠습니까 버튼 뜸
+                document.getElementById('button').style.visibility = "visible";
+                // 클릭한 위도, 경도 정보를 가져옵니다 
+                var latlng = mouseEvent.latLng; 
+                
+                // 마커 위치를 클릭한 위치로 옮깁니다
+                centerMarker.setPosition(latlng);
+                    
+                //클릭한 위치의 위도/경도값을 나타내주는 메시지
+                var message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
+                message += '경도는 ' + latlng.getLng() + ' 입니다';
+
+                document.getElementById("lati").value = latlng.getLat();
+                document.getElementById("long").value = latlng.getLng(); 
+                
+                var resultDiv = document.getElementById('clickLatlng'); 
+                resultDiv.innerHTML = message;
+
+                var markers = [];
+            });
+
+            kakao.maps.event.addListener(marker, 'click', function() {
+                // 마커 위에 인포윈도우를 표시합니다
+                infowindow.open(map, marker);  
+            });
+        </script>
+
+        <!-- 마커를 클릭했을 때 해당 마커를 추가하기 위한 form-->
+        <div>
+            <br>
+            <!-- submit 버튼을 누르면 view.py의 addPlace() 함수를 호출합니다-->
+            <form action="{% url 'addPlace'  %}" method = "post">
+            {%csrf_token%}
+            <input type="hidden" name="lat" id = "lati" value="위도" >
+            <input type="hidden" name="lng" id = "long" value="경도" >
+            <input type="hidden" name="category" id = "category" value="{{list.name}}">
+            <button type="submit" id="button" style="visibility:hidden">해당 장소를 추가하겠습니다</button> <!-- 숨겨져 있다가 지도가 클릭되면 나타남-->
+        </div>
+
+        <!-- 여태까지 저장했던 마커들을 나타내기 위한 코드-->
+        <div class = "container">
+             <!-- 모든 사용자가 만든 마커 중 현재 사용자가 해당 카테고리를 위해 만든 마커만 골라냄-->
+            {% for content in contents %} 
+                {% if list.author == user.username and list.name == content.category %}
+                    <script>
+                    var tmptitle = '{{content.title}}';   
+                    var latlng = new kakao.maps.LatLng('{{content.lat}}','{{content.lng}}'); //해당 마커의 좌표값
+                    </script> 
+
+                    <!-- 아이콘으로 저장한 이미지가 있을 때-->
+                    {% if list.icon %} 
+                    <script>
+                       var imageSrc = '{{list.icon.url}}', // 마커이미지의 주소입니다    
+                                imageSize = new kakao.maps.Size(50, 55), // 마커이미지의 크기입니다
+                                imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+                    </script>
+                    {% endif %}
+
+                    <!-- 아이콘으로 저장한 이미지가 없으면 디폴트 마커가 생성됨 (static 폴더에 들어있는 빨간색 마커)-->
+                    {% if not list.icon %} 
+                    <script>
+                        {% load static %}
+                        var imageSrc = '{% static "marker.png" %}', // 마커이미지의 주소입니다    
+                            imageSize = new kakao.maps.Size(48, 52), // 마커이미지의 크기입니다
+                            imageOption = {offset: new kakao.maps.Point(27, 69)}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+                            // 지도를 클릭한 위치에 표출할 마커입니다   
+                    </script>
+                    {% endif %}
+
+                    <!-- 마커와 인포윈도우를 위한 코드들입니다-->
+                    <script>
+                            var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+                            var marker = new kakao.maps.Marker({
+                            map: map, // 마커를 표시할 지도
+                            position: latlng, // 마커를 표시할 위치
+                            title : tmptitle, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다 
+                            image: markerImage //마커의 이미지 (아이콘)
+                            });
+                            marker.setMap(map);  //마커를 지도에 그립니다
+                            var iwContent = '<div style="padding-left:5px; text-align:center">{{content.title}}<br><a href = "{%url 'detailPlace' content.id %}">자세히 보기</a></div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+                            iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
+                            var infowindow = new kakao.maps.InfoWindow({
+                            content: iwContent,
+                            removable : true
+                            }) // 인포윈도우에 표시할 내용
+                            kakao.maps.event.addListener(marker, 'click', makeOverListener(map, marker, infowindow));
+
+                            function makeOverListener(map, marker, infowindow) {
+                                return function() {
+                                    infowindow.open(map, marker);
+                                };
+                            }
+                            
+                            function setMarkers(map) {
+                                for (var i = 0; i < markers.length; i++) {
+                                    markers[i].setMap(map);
+                                }            
+                            };
+                            
+                            function showMarkers() {
+                                setMarkers(map)    
+                            };
+                      </script>
+
+                <!-- 화면 하단에 하나하나의 마커에 대한 정보를 출력해주는 부분입니다-->
+                    <h3>[{{content.title}}]</h3> <!-- 제목-->
+                    <br>{{content.summary}}<br> <!-- 내용 -->
+                    <button type="button" class="btn btn-secondary" onclick = "location.href = '{%url 'detailPlace' content.id %}'">자세히</button> <!-- 클릭하면 마커에 대한 자세한 정보를 나태내주는 detailPlace.html로 이동합니다-->  
+             </div>
+            {% endif %}
+        {% endfor %}
+    </div><br>
+{% endblock %}

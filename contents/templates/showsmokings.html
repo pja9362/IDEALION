@@ -1,0 +1,91 @@
+{% extends 'base.html'%}
+
+{% block content %}
+    <head>
+        <meta charset="utf-8">
+        <h3>&#129371; 쓰레기통 지도 &#129371;</h3>
+        <h4>아래 지도에서 마커를 확인하세요!</h4>
+    </head>
+    <body>
+    <div id="map" style="width:1250ox;height:520px;"></div>
+        
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f10335069a4d9c45d697acbf72f5383f"></script>
+    <script>
+                
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div  
+        mapOption = { 
+            center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
+            level: 3 // 지도의 확대 레벨
+        };
+
+    var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+        // 마커를 표시할 위치와 title 객체 배열입니다 
+    var positions = [
+        {
+            title: '카카오', 
+            latlng: new kakao.maps.LatLng(37.56370524635551, 126.97706545149815)
+        },
+        {
+            title: '생태연못', 
+            latlng: new kakao.maps.LatLng(37.554241643849535, 126.97542592110576)
+        },
+        {
+            title: '텃밭', 
+            latlng: new kakao.maps.LatLng(37.564747386520722, 126.9668271042598)
+        },
+        
+        {
+            title: '근린공원',
+            latlng: new kakao.maps.LatLng(37.56633355721492, 126.97683677130621)
+        },
+        {
+            title: '근린공원',
+            latlng: new kakao.maps.LatLng(37.56591977682272, 126.97849950630614)
+        },
+        {
+            title: '카카오', 
+            latlng: new kakao.maps.LatLng(37.56707682362837, 126.97687543956202)
+        },
+        {
+            title: '생태연못', 
+            latlng: new kakao.maps.LatLng(37.56791586290456, 126.97737812687728)
+        },
+        {
+            title: '텃밭', 
+            latlng: new kakao.maps.LatLng(37.566127071088125, 126.97747942280077)
+        },
+        
+        {
+            title: '근린공원',
+            latlng: new kakao.maps.LatLng(37.56495468409085, 126.97867330519897)
+        },
+        {
+            title: '근린공원',
+            latlng: new kakao.maps.LatLng(37.56667877623167, 126.97925816256813)
+        }
+    ];
+
+    // 마커 이미지의 이미지 주소입니다
+    var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png"; 
+        
+    for (var i = 0; i < positions.length; i ++) {
+        
+        // 마커 이미지의 이미지 크기 입니다
+        var imageSize = new kakao.maps.Size(24, 35); 
+        
+        // 마커 이미지를 생성합니다    
+        var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
+        
+        // 마커를 생성합니다
+        var marker = new kakao.maps.Marker({
+            map: map, // 마커를 표시할 지도
+            position: positions[i].latlng, // 마커를 표시할 위치
+            title : positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+            image : markerImage // 마커 이미지 
+        });
+    }
+
+    </script>   
+
+{% endblock %}

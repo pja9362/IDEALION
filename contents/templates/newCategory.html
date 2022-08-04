@@ -1,0 +1,19 @@
+<!-- 새로운 지도 카테고리를 생성하기 위한 화면입니다-->
+{% extends 'base.html'%}
+
+{% block content %}
+<br>
+<br>
+<br>
+<h2>&#128161; 카테고리를 생성하세요</h2>
+
+<!-- 하단의 폼들이 작성되어 submit 버튼을 부르면 view.py의 newCategory() 함수에 폼에 들어간 값들이 전달됩니다-->
+<div class="newcategory">
+<form action="{% url 'newCategory' %}" method = "post" enctype="multipart/form-data">
+    {%csrf_token%}
+    {{form.as_p}} <!--forms.py에 있는 categoryForm에 있는 폼들이 띄워집니다 -->
+    <button class="submit" type = "submit">submit</button> <!-- 제출 버튼-->
+</form>
+</div>
+
+{% endblock %}

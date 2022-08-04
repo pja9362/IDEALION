@@ -1,0 +1,33 @@
+<!-- 로그인 화면 -->
+{% extends 'base.html'%}
+
+{% block content %}
+<br>
+<br>
+
+<h2>&#128161; 로그인</h2>
+<br>
+
+<!-- 하단의 form들이 view.py의 login_view() 함수로 전달됩니다-->
+<form action="{% url 'login'%}" method = "post">
+    {%csrf_token%}
+    {{ form.non_field_errors }}
+
+    <!--아이디 입력 폼-->
+    <div class="form-group">
+        <label for="{{ form.username.id_for_label }}">Username:</label>
+        {{ form.username }}
+        {{ form.username.errors }}
+    </div><br>
+
+    <!--비밀번호 입력 폼-->
+    <div class="form-group">
+        <label for="{{ form.password.id_for_label }}">Password: </label>
+        {{ form.password }}
+        {{ form.password.errors }}
+    </div><br>
+
+    <!-- 전송버튼-->
+    <button class="submit4" type="submit">login</button>
+</form>
+{% endblock %}

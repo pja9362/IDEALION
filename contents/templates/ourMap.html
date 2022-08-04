@@ -1,0 +1,44 @@
+{% extends 'base.html'%}
+
+{% block content %}
+<style>
+    .ex > a{
+        text-decoration-line: none;
+        color: black;
+
+    }
+</style>
+    <head>
+        <meta charset="utf-8">
+        <p><h3>&#127748;우리의 지도&#127748;를 통해 구석구석 숨겨진 유용한 곳을 찾아보세요!</h3></p><br>
+    </head>
+    <body>
+        <div class="ex">
+            <a href ="{% url 'showtoilets' %}">&#128204;공중화장실</a>
+          
+            <a href ="{% url 'showsmokings' %}">&#128204;쓰레기통</a>
+            
+        </div><br><br>
+            
+
+    <div id="map" style="width:1250ox;height:480px;"></div>
+
+    
+       
+        
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f10335069a4d9c45d697acbf72f5383f"></script>
+    <script>
+        var markers=[];
+        
+        var mapContainer = document.getElementById('map'), // 지도를 표시할 div  
+            mapOption = { 
+                center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
+                level: 3 // 지도의 확대 레벨
+            };
+
+        var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+        
+    </script>   
+
+{% endblock %}

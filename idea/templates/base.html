@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang= "en">
+    <head>
+        <meta charset= "UTF_8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width = device-width, initial-scale = 1.0">
+        <title>MAP</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&display=swap" rel="stylesheet"> 
+    </head>
+    <style>
+      *{font-family: 'Nanum Gothic Coding', monospace;}
+        label{font-weight: bold}
+        body{text-align: center;
+            font-family : 'Zilla Slab', serif;
+            margin: 0px;
+            
+            }
+        h3{margin-top : 40px ; font-weight: 900;}
+        button{margin-left : 20px;}
+        .map_wrap {position:relative;width:100%;height:350px;}
+        .title {font-weight:bold;display:block;}
+        .hAddr {position:absolute;left:10px;top:10px;border-radius: 2px;background:#fff;background:rgba(255,255,255,0.8);z-index:1;padding:5px;}
+        #centerAddr {display:block;margin-top:2px;font-weight: normal;}
+        .bAddr {padding:5px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+        .form-group{margin-top : 25px;}
+        .map_wrap, .map_wrap * {margin:0;padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
+        .map_wrap a, .map_wrap a:hover, .map_wrap a:active{color:#000;text-decoration: none;}
+        .map_wrap {position:relative;width:100%;height:500px;}
+        #menu_wrap {position:absolute;top:0;left:0;bottom:0;width:250px;margin:10px 0 30px 10px;padding:5px;overflow-y:auto;background:rgba(255, 255, 255, 0.7);z-index: 1;font-size:12px;border-radius: 10px;}
+        .bg_white {background:#fff;}
+        #menu_wrap hr {display: block; height: 1px;border: 0; border-top: 2px solid #5F5F5F;margin:3px 0;}
+        #menu_wrap .option{text-align: center;}
+        #menu_wrap .option p {margin:10px 0;}  
+        #menu_wrap .option button {margin-left:5px;}
+        #placesList li {list-style: none;}
+        #placesList .item {position:relative;border-bottom:1px solid #888;overflow: hidden;cursor: pointer;min-height: 65px;}
+        #placesList .item span {display: block;margin-top:4px;}
+        #placesList .item h5, #placesList .item .info {text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+        #placesList .item .info{padding:10px 0 10px 55px;}
+        #placesList .info .gray {color:#8a8a8a;}
+        #placesList .info .jibun {padding-left:26px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;}
+        #placesList .info .tel {color:#009900;}
+        #placesList .item .markerbg {float:left;position:absolute;width:36px; height:37px;margin:10px 0 0 10px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;}
+        #placesList .item .marker_1 {background-position: 0 -10px;}
+        #placesList .item .marker_2 {background-position: 0 -56px;}
+        #placesList .item .marker_3 {background-position: 0 -102px}
+        #placesList .item .marker_4 {background-position: 0 -148px;}
+        #placesList .item .marker_5 {background-position: 0 -194px;}
+        #placesList .item .marker_6 {background-position: 0 -240px;}
+        #placesList .item .marker_7 {background-position: 0 -286px;}
+        #placesList .item .marker_8 {background-position: 0 -332px;}
+        #placesList .item .marker_9 {background-position: 0 -378px;}
+        #placesList .item .marker_10 {background-position: 0 -423px;}
+        #placesList .item .marker_11 {background-position: 0 -470px;}
+        #placesList .item .marker_12 {background-position: 0 -516px;}
+        #placesList .item .marker_13 {background-position: 0 -562px;}
+        #placesList .item .marker_14 {background-position: 0 -608px;}
+        #placesList .item .marker_15 {background-position: 0 -654px;}
+        #pagination {margin:10px auto;text-align: center;}
+        #pagination a {display:inline-block;margin-right:10px;}
+        #pagination .on {font-weight: bold; cursor: default;color:#777;}
+        .header{
+          background-color: #004d40;
+          display: flex;
+          width:100%;
+          
+          height:86px;
+          /* border-bottom: 0.5px solid rgba(247, 247, 247, 0.5); */
+          
+        }
+        .searchArea{
+          margin-left:80px;
+          background-color: #004d40;
+          width: 300px;
+          height: 40px;
+          background: #00251a;
+          border-radius: 5px;
+          margin-top: 24px;
+        }
+        
+        .logo{
+          margin-left: 30px;
+          margin-top: 28px;
+          font-size: 17px;
+          color: white;
+          width: 100px;
+          height: 60px;
+          padding-top: 10px;
+          border-top: 3px dotted #39796b;
+        } 
+        .searchArea > form > input{
+          
+          border: none;
+          width: 230px;
+          height: 40px;
+          background: rgba(0,0,0,0);
+          color:#00251a;
+          padding-left: 10px;
+        }
+        .searchArea > form > span{
+          width: 20px;
+          color: white;
+          font-weight: bold;
+          font-size: smaller;
+          cursor: pointer;
+          
+          
+        }
+        .nav{
+          background-color: #004d40;
+          display: flex;
+          width:calc(1280px - 300px);
+          justify-content: flex-end;
+          line-height: 36px;
+          padding-right: 70px;
+          padding-top: 15px;
+         
+          
+        }
+
+        .nav > li{
+          list-style: none;
+          margin-top: 0px;
+          
+          margin-left: 30px;
+    
+          border-top: 3px dotted #39796b;
+
+        }
+        .nav > li > a{
+          text-decoration-line: none;
+          color:#fff;
+         
+          
+        }
+        .nav > a{
+          text-decoration-line: none;
+          color:#fff
+        }
+
+        .grid{
+          display: grid;
+          grid-template-columns: 150px 1fr;
+          
+
+        }
+        
+        .side {
+
+          background-color: #004d40;
+          height: 667px;
+          
+        }
+    
+
+        
+        .side> li {
+          list-style: none;
+          color: white;
+          padding-top: 30px;
+          padding-bottom: 30px;
+          box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.07);
+          font-size: smaller;
+        }
+
+        .side> li > a {
+          text-decoration-line: none;
+          color: white;
+        }
+
+        .menu {
+          color: white;
+          font-size: large;
+          padding-bottom: 35px;
+          padding-top: 35px;
+          border-bottom: 1px solid rgba(32, 48, 36, 0.5);
+          border-top: 1px solid rgba(32, 48, 36, 0.5);
+          
+          
+        }
+        .footer{
+          padding-top: 100px;
+          font-size: 12px;
+        }
+
+        
+
+        .container{
+          padding-left: 20px;
+          padding-right: 20px;
+        }
+
+        .newcategory{
+          padding-left: 560px;
+          padding-top: 50px;
+          text-align: left;
+        
+          
+        }
+        .submit{
+          margin-left: 0px;
+          border-radius: 5px;
+          margin-top: 40px;
+          color: black;
+          width: 230px;
+          height: 39px;
+          border-color: #aebfbe;
+          background-color: white;
+        }
+        .add{
+          text-align: left;
+          padding-left: 470px;
+        }
+
+        .submit2{
+          margin-left: 0px;
+          border-radius: 5px;
+          margin-top: 40px;
+          color: black;
+          width: 375px;
+          height: 39px;
+          border-color: #aebfbe;
+          background-color: white;
+        }
+        .edit{
+          margin-left: 470px;
+          padding-top: 30px;
+          border: 1px solid gray;
+          border-radius: 5px;
+          width: 400px;
+          height: 300px;
+        }
+        .edit > a {
+          text-decoration-line: none;
+          color: gray;
+        }
+        .submit3{
+          margin-left: 0px;
+          border-radius: 5px;
+          margin-top: 40px;
+          color: black;
+          width: 270px;
+          height: 39px;
+          border-color: #aebfbe;
+          background-color: white;
+        }
+        .submit4{
+          margin-left: 0px;
+          border-radius: 5px;
+          margin-top: 40px;
+          color: black;
+          width: 230px;
+          height: 39px;
+          border-color: #aebfbe;
+          background-color: white;
+        }
+                
+    </style> 
+    <body>
+        {% load static %}
+        <!-- header start -->
+      
+        <div class="header" id="link_header">
+          <div class="logo">성대 김정호</div>
+          <div class="searchArea">
+            
+           <form>   
+               <input type="search" placeholder="search">
+               <span>검색</span>
+           </form>
+          </div>
+          <ul class="nav">
+              <li><a class="brand" href="{%url 'home'%}"> HOME </a></li>
+
+              {% if user.is_authenticated %}
+              <li><a href="{%url 'logout'%}"> LOGOUT </a></li>
+              <li><a href="{%url 'edit_profile' %}"> EDIT PROFILE </a></li>
+              <li><a href="#link_main_text2"> CONTACT </a></li>
+          
+              
+              {% endif %}
+
+              {% if not user.is_authenticated %}
+              <li><a href="{%url 'login'%}"> LOGIN </a></li>
+              <li><a href="{%url 'signup'%}"> SIGN UP </a></li>
+                  
+              {% endif %}
+    
+          </ul>
+        </div>
+
+        <!-- header end -->
+        {% if user.is_authenticated%}
+        <div class="grid"> 
+          <div class="side">
+            <div class="menu">MENU</div>
+            <li><a href="{% url 'home' %}">나만의 지도</a></li>
+            <li><a href="{% url 'ourMap' %}">우리의 지도</a></li>
+            <li><a href="{%url 'login'%}">그들의 지도</a></li>
+            <li><a href="{%url 'login'%}">ABOUT US</a></li>
+            
+            <div class="footer">
+              <p>&#128075; 성대 김정호 &#128075;</p>
+              <p>김단 박진아</p>
+              <p>윤효정 이영신</p>
+              
+              <br><p>&#127979; 성균관대학교 &#127979;</p> <p>멋쟁이 사자처럼 9기</p>
+
+
+            </div>
+
+          </div> 
+          {% endif %}
+
+          {% if not user.is_authenticated%}
+          
+          <div class="grid"> 
+            <div class="side">
+              <div class="menu">MENU</div>
+              <li><a href="{%url 'login'%}">나만의 지도</a></li>
+              <li><a href="{%url 'login'%}">우리의 지도</a></li>
+              <li><a href="{%url 'login'%}">그들의 지도</a></li>
+              <li><a href="{%url 'login'%}">ABOUT US</a></li>
+
+              <div class="footer">
+                <p>&#128075; 성대 김정호 &#128075;</p>
+                <p>김단 박진아</p>
+                <p>윤효정 이영신</p>
+                
+                <br><p>&#127979; 성균관대학교 &#127979;</p> <p>멋쟁이 사자처럼 9기</p>
+  
+  
+              </div>
+  
+            </div>
+            {% endif %}
+
+          <div class = "container">
+              {% block content %}
+              {% endblock %}
+
+          </div>
+      </div>
+    
+</body>
+
+</html> 

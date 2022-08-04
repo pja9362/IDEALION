@@ -1,0 +1,19 @@
+<!-- detailPlace에서 선택한 마커를 수정하는 화면-->
+{% extends 'base.html'%}
+
+{% block content %}
+<br>
+<br>
+
+<h2>&#128161; Update Your MAP</h2><br>
+
+<!-- 하단의 폼들이 view.py의 updatePlace() 함수로 전달됩니다-->
+<form action="{% url 'updatePlace' content.id %}" method = "post">
+    {%csrf_token%}
+    <p>제목: <input type='text' name = 'title' value = "{{content.title}}"></p>  <!-- 제목 입력 폼-->
+    <p>분류: <input type='text' name = 'category' value = "{{content.category}}"></p> <!-- 카테고리 입력 폼-->
+    <p>작성자: <input type='text' name = 'writer' value = "{{content.writer}}"></p> <!-- 사용자 입력 폼-->
+    <p>본문: <textarea name='body' id='' cols = "30" rows ="10">{{content.body}}</textarea></p> <!-- 내용 입력 폼-->
+    <button class="submit3" type = "submit">submit</button> <!-- 제출 버튼-->
+</form>
+{% endblock %}

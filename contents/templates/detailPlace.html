@@ -1,0 +1,25 @@
+<!-- 위치에 대한 상세 정보를 나타내주는 화면-->
+{% extends 'base.html'%}
+
+{% block content %}
+<br>
+<br>
+<br>
+
+        <h2>--------- {{content.title}} ---------</h2> <!-- 제목 -->
+        <br>
+        
+        <div class="edit">
+        <div>
+            <h4>작성자: {{content.writer}}</h4> <!-- 작성자 -->
+            <h4>작성날짜: {{content.pub_date}}</h4> <!-- 작성날짜 -->
+        </div>
+            <br>
+            {% if content.image %} <!-- 첨부한 이미지가 있다면 실행됨 / 없으면 실행안됨 -->
+            <p><img src = "{{content.image.url}}" alt = ""></p> <!-- 이미지 불러오는 링크 -->
+            {% endif %}
+            <p>{{content.detail}}</p> <!-- 작성한 내용-->  <br><br>
+            
+            <a href = "{% url 'editPlace' content.id %}">&#x1F4CC;수정하기</a> <!-- 수정하기 버튼 / 누르면 view.py의 editPlace() 함수에 수정할 게시물의 id가 전달됩니다.--> 
+            <a href = "{% url 'deletePlace' content.id %}">&#x1F4CC;삭제하기</a></div>  <!-- 삭제하기 버튼 / 누르면 view.py의 editPlace() 함수에 삭제할 게시물의  id가 전달됩니다.-->
+{% endblock %}
